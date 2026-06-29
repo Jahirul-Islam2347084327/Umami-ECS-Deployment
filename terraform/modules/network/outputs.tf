@@ -1,0 +1,11 @@
+output "vpc-id" {
+value = aws_vpc.main.id  
+}
+
+output "public-subnet-ids" {
+  value = [aws_subnet.public-subnet-a.id, aws_subnet.public-subnet-b.id]
+}
+
+output "private-subnet-ids" {
+  value = [aws_subnet.private-subnet-a.id, aws_subnet.private-subnet-b.id]
+}

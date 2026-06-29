@@ -1,0 +1,11 @@
+name: docker workflow
+
+on:
+    workflow_dispatch:
+    #push:
+        #paths:
+            #- terraform/**
+            
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
