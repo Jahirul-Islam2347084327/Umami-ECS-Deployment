@@ -87,36 +87,6 @@ resource "aws_internet_gateway" "main" {
   }
 }
 
-#resource "aws_network_acl" "main" {
- # vpc_id = aws_vpc.main.id
-  #ingress{
-   # protocol = "tcp"
-    #from_port = 443
-   # to_port = 443
-   # action = "allow"
-   # cidr_block = "0.0.0.0/0"
-   # rule_no = 100
-  #}
-  #ingress{
-  #  protocol = "tcp"
-  #  from_port = 80
-  #  to_port = 80
-  #  action = "allow"
-  #  cidr_block = "0.0.0.0/0"
-   # rule_no = 110
- # }
-  #egress{
-  #  protocol = "tcp"
-  #  from_port = 1024
-  #  to_port = 65535
-  #  action = "allow"
-  #  cidr_block = "0.0.0.0/0"
-  #}
-  #tags = {
-  #  Name = "network-acl"
-  #}
-#}
-
 resource "aws_eip" "nat-ip-a" {
   domain = "vpc"
 
