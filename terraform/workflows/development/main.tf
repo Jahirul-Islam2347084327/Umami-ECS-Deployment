@@ -48,3 +48,24 @@ module "vpc" {
   az1 = var.az1
   az2 = var.az2
 }
+
+module "ecr" {
+  source = "../../modules/ecr"
+}
+
+module "ecs" {
+  source = "../../modules/ecs"
+  target-group-arn = module.alb.target-group-arn
+  ecs-security-group-id =
+  database-url =
+  image-url = module.ecr.ecr-repo-url
+  private-subnet-ids = module.vpc.private-subnet-ids
+}
+
+module "alb" {
+  source = "../../modules/alb"
+  alb-security-group-id =
+  certificate-arn = 
+  public-subnets-id = module.vpc.public-subnet-ids
+  vpc-id = module.vpc.vpc-id
+}
