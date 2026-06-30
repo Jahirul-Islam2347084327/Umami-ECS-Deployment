@@ -69,3 +69,9 @@ module "alb" {
   public-subnets-id = module.vpc.public-subnet-ids
   vpc-id = module.vpc.vpc-id
 }
+
+module "rds" {
+  source = "../../modules/rds"
+  private-subnet-ids = module.vpc.private-subnet-ids
+  rds-sg-id = 
+}
