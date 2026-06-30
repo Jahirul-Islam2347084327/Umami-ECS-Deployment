@@ -6,27 +6,133 @@ resource "aws_ecs_cluster" "ecs-cluster" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_execution" {
+  role = aws_iam_role.ecs_execution.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_cloudwatch_log_group" "ecs" {
+ name = "ecs-umami"
+ retention_in_days = 7
+ tags = {
+  Name = "ecs-cloudwatch-logs"
+ } 
+}
+
+resource "aws_iam_role" "ecs_execution" {
+    name = "ecs-execution-role"
+
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [{
+            Action = "sts:AssumeRole"
+            Effect = "Allow"
+            Principal = {
+                Service = "ecs-tasks.amazonaws.com"
+            }
+        }]
+    })
+}
+
 resource "aws_ecs_task_definition" "task-definition" {
-  container_definitions = jsonencode([{
+
+  requires_compatibilities = ["FARGATE"]
+  network_mode = "awsvpc"
+  cpu = "512"
+  memory = "1024"
+  family = "umami-task"
+  execution_role_arn = aws_iam_role.ecs_execution.arn
+  container_definitions = jsonencode ([{
+
+    name = "umami"
+    image = var.image-url #docker repo url
     
-  }])
-  family = aws_ecs_cluster.ecs-cluster.id
+
+    portMappings = [{
+        containerPort = 3000
+        protocol = "tcp"
+    }]
+
+    environment = [{
+        name = "DATABASE_URL"
+        value = var.database-url #rds url
+
+    }]
+
+    logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+            "awslogs-group" = aws_cloudwatch_log_group.ecs.name
+            "awslogs-region" = "us-east-1"
+            "awslogs-stream-prefix" = "ecs"
+        }
+    }
+  }]) 
 }
 
-resource "aws_ecs_service" "ecs-ram-service" {
-  name = "ck"
+resource "aws_ecs_service" "app" {
+    name = "umami-service"
+    cluster = aws_ecs_cluster.ecs-cluster.id
+    task_definition = aws_ecs_task_definition.task-definition.arn
+    desired_count = 2
+    launch_type = "FARGATE" 
+
+    network_configuration {
+      subnets = var.private-subnet-ids #subnet ids
+      security_groups = var.ecs-security-group-id #securtiy group id
+      assign_public_ip = false
+    }
+
+    load_balancer {
+    target_group_arn = var.target-group-arn #target group arn
+    container_name   = "umami"
+    container_port   = 3000
+    }
+  tags = {
+    Name = "umami-service"
+  }
 }
 
-resource "aws_ecs_service" "ecs-cpu-service" {
-  name = "ck"
+
+resource "aws_appautoscaling_target" "ecs_target" {
+  max_capacity       = 5        # Maximum number of containers allowed
+  min_capacity       = 2       # Minimum number of containers allowed
+  resource_id        = "service/${aws_ecs_cluster.ecs-cluster.name}/${aws_ecs_service.app.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
 }
 
-resource "aws_iam_role_policy_attachment" "ecs-role-attachment" {
-  role = "dce"
-  policy_arn = "ded"
+
+resource "aws_appautoscaling_policy" "ecs_policy_cpu" {
+  name               = "cpu-autoscaling-policy"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.ecs_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.ecs_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.ecs_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+    target_value       = 70.0  # Scale up if average CPU utilization crosses 70%
+    scale_in_cooldown  = 300   # Wait 5 mins 
+    scale_out_cooldown = 60    # Scales out quickly if traffic spikes
+  }
 }
 
-resource "aws_iam_role" "ecs-role" {
-  assume_role_policy = "dew"
-}
+resource "aws_appautoscaling_policy" "ecs_policy_memory" {
+  name               = "memory-autoscaling-policy"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.ecs_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.ecs_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.ecs_target.service_namespace
 
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageMemoryUtilization"
+    }
+    target_value       = 70.0  # Scale up if average RAM crosses 70%
+    scale_in_cooldown  = 300
+    scale_out_cooldown = 60
+  }
+}
