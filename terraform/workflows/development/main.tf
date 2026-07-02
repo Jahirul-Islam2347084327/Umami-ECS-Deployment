@@ -18,6 +18,9 @@ provider "aws" {
   region = "us-east-1"
 }
 
+/*==============================================================================
+  UNCOMMENT THIS TO CREATE THE BACKEND THEN LATER COMMENT IT TO AVOID DESTROYING
+  ==============================================================================
 resource "aws_s3_bucket" "terraform_state" { 
   bucket = "jahis-devops-directive-state-2026"
   force_destroy = true
@@ -42,7 +45,7 @@ resource "aws_dynamodb_table" "terraform-locks" {
     type = "S"
   }
 }
-
+*/
 module "vpc" {
   source = "../../modules/network"
   az1 = var.az1
@@ -56,15 +59,15 @@ module "ecr" {
 module "ecs" {
   source = "../../modules/ecs"
   target-group-arn = module.alb.target-group-arn
-  ecs-security-group-id =
-  database-url =
+  ecs-security-group-id = module.security.ecs-security
+  database-url = module.rds.rds-url
   image-url = module.ecr.ecr-repo-url
   private-subnet-ids = module.vpc.private-subnet-ids
 }
 
 module "alb" {
   source = "../../modules/alb"
-  alb-security-group-id =
+  alb-security-group-id = module.security.alb-security
   certificate-arn = 
   public-subnets-id = module.vpc.public-subnet-ids
   vpc-id = module.vpc.vpc-id
@@ -73,5 +76,10 @@ module "alb" {
 module "rds" {
   source = "../../modules/rds"
   private-subnet-ids = module.vpc.private-subnet-ids
-  rds-sg-id = 
+  rds-sg-id = module.security.rds-security
+}
+
+module "security" {
+  source = "../../modules/security"
+  vpc-id = module.vpc.vpc-id
 }
