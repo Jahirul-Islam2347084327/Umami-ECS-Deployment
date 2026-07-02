@@ -1,6 +1,6 @@
 output "ecs-security" {
-  value = aws_security_group.ecs-security.id
-}
+  value = [aws_security_group.ecs-security.id]
+  }
 
 output "alb-security" {
   value = aws_security_group.alb-security.id
