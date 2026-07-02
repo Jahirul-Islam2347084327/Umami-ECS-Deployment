@@ -68,7 +68,7 @@ module "ecs" {
 module "alb" {
   source = "../../modules/alb"
   alb-security-group-id = module.security.alb-security
-  certificate-arn = 
+  certificate-arn = module.route53.acm-arn
   public-subnets-id = module.vpc.public-subnet-ids
   vpc-id = module.vpc.vpc-id
 }
@@ -82,4 +82,11 @@ module "rds" {
 module "security" {
   source = "../../modules/security"
   vpc-id = module.vpc.vpc-id
+}
+
+module "route53" {
+  source = "../../modules/route53"
+  alb-dns-name = module.alb.alb-dns
+  alb-zone-id = module.alb.alb-zone-id
+  custom-url =  var.custom-url
 }

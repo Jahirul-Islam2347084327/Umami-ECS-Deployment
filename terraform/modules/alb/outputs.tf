@@ -8,10 +8,10 @@ output "target-group-arn" {
 
 output "alb-arn" {
   
-  value       = aws_lb.main.arn
+  value = aws_lb.main.arn
 }
 
 output "alb-zone-id" {
   
-  value       = aws_lb.main.zone_id
+  value = aws_lb.main.zone_id
 }
