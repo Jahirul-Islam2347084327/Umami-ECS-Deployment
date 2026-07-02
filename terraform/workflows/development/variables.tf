@@ -9,3 +9,9 @@ variable "az2" {
   description = "availibilty zone for the second set of public and private subnet"
   default = "us-east-1b"
 }
+
+variable "custom-url" {
+  type = string
+  description = "a domain that you own"
+  default = "jahirulmadethisin2026.com"
+}
