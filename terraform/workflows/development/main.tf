@@ -90,3 +90,8 @@ module "route53" {
   alb-zone-id = module.alb.alb-zone-id
   custom-url =  var.custom-url
 }
+
+module "waf" {
+  source = "../../modules/waf"
+  alb-arn = module.alb.alb-arn
+}
