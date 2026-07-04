@@ -15,3 +15,7 @@ variable "custom-url" {
   description = "a domain that you own"
   default = "jahirulmadethisin2026.com"
 }
+
+variable "region" {
+  default = "us-east-1"
+}

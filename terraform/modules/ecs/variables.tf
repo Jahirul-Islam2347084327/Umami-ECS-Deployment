@@ -17,3 +17,7 @@ variable "ecs-security-group-id" {
 variable "target-group-arn" {
   type = string
 }
+
+variable "region" {
+  type = string
+}

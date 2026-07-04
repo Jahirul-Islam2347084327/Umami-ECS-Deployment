@@ -63,7 +63,7 @@ resource "aws_ecs_task_definition" "task-definition" {
         logDriver = "awslogs"
         options = {
             "awslogs-group" = aws_cloudwatch_log_group.ecs.name
-            "awslogs-region" = "us-east-1"
+            "awslogs-region" = var.region
             "awslogs-stream-prefix" = "ecs"
         }
     }
@@ -88,6 +88,17 @@ resource "aws_ecs_service" "app" {
     container_name   = "umami"
     container_port   = 3000
     }
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      load_balancer,   
+      task_definition  
+    ]
+  }
+
   tags = {
     Name = "umami-service"
   }

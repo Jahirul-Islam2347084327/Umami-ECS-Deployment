@@ -140,22 +140,22 @@ resource "aws_route_table_association" "private-b" {
   route_table_id = aws_route_table.private-route-table-b.id
 }
 
-resource "aws_vpc_endpoint" "vpc-endpoint-ekr" {
+resource "aws_vpc_endpoint" "vpc-endpoint-dkr" {
   vpc_id = aws_vpc.main.id
   subnet_ids = [aws_subnet.private-subnet-a.id, aws_subnet.private-subnet-b.id]
-  service_name = "com.amazonaws.us-east-1.ecr.dkr"
+  service_name = "com.amazonaws.${var.region}.ecr.dkr"
   vpc_endpoint_type = "Interface"
   private_dns_enabled = true
 
   tags = {
-    Name = "ekr-endpoint"
+    Name = "dkr-endpoint"
   }
 }
 
 resource "aws_vpc_endpoint" "vpc-endpoint-api" {
   vpc_id = aws_vpc.main.id
   subnet_ids = [aws_subnet.private-subnet-a.id, aws_subnet.private-subnet-b.id]
-  service_name = "com.amazonaws.us-east-1.ecr.api"
+  service_name = "com.amazonaws.${var.region}.ecr.api"
   vpc_endpoint_type = "Interface"
   private_dns_enabled = true
 

@@ -43,8 +43,3 @@ resource "aws_dynamodb_table" "terraform-locks" {
   }
 }
 
-module "vpc" {
-  source = "./modules/network"
-  az1 = var.az1
-  az2 = var.az2
-}

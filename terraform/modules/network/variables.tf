@@ -7,3 +7,7 @@ variable "az2" {
   type = string
   description = "availibilty zone for the second set of public and private subnet"
 }
+
+variable "region" {
+  type = string
+}

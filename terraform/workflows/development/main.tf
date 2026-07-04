@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket = "jahis-devops-directive-state-2026"
     key = "tf-infra/terraform.tfstate"
-    region = "us-east-1"
+    region = "us-east-1" # change this to your desired region
     dynamodb_table = "terraform-state-locking"
     encrypt = true
   }
@@ -15,12 +15,9 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
 
-/*==============================================================================
-  UNCOMMENT THIS TO CREATE THE BACKEND THEN LATER COMMENT IT TO AVOID DESTROYING
-  ==============================================================================
 resource "aws_s3_bucket" "terraform_state" { 
   bucket = "jahis-devops-directive-state-2026"
   force_destroy = true
@@ -45,11 +42,12 @@ resource "aws_dynamodb_table" "terraform-locks" {
     type = "S"
   }
 }
-*/
+
 module "vpc" {
   source = "../../modules/network"
   az1 = var.az1
   az2 = var.az2
+  region = var.region
 }
 
 module "ecr" {
@@ -63,6 +61,7 @@ module "ecs" {
   database-url = module.rds.rds-url
   image-url = module.ecr.ecr-repo-url
   private-subnet-ids = module.vpc.private-subnet-ids
+  region = var.region
 }
 
 module "alb" {
@@ -94,4 +93,13 @@ module "route53" {
 module "waf" {
   source = "../../modules/waf"
   alb-arn = module.alb.alb-arn
+}
+
+module "codedeploy" {
+  source = "../../modules/codedeploy"
+  target-blue-name = module.alb.target-blue-name
+  target-green-name = module.alb.target-green-name
+  alb-listener = module.alb.alb-listener
+  service-name = module.ecs.service-name
+  cluster-name = module.ecs.cluster-name
 }
