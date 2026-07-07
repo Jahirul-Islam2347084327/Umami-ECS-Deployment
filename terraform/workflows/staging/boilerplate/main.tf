@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
     bucket = "jahis-devops-directive-state-2026"
-    key = "tf-infra/terraform.tfstate"
-    region = "us-east-1"
+    key = "boilerplate/terraform.tfstate"
+    region = "us-east-1" # change this to your desired region
     dynamodb_table = "terraform-state-locking"
     encrypt = true
   }
@@ -15,7 +15,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
 
 resource "aws_s3_bucket" "terraform_state" { 
@@ -42,4 +42,3 @@ resource "aws_dynamodb_table" "terraform-locks" {
     type = "S"
   }
 }
-
