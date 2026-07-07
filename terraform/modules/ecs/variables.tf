@@ -1,5 +1,6 @@
 variable "image-url" {
   type = string
+  default     = "public.ecr.aws/nginx/nginx:alpine"
 }
 
 variable "database-url" {

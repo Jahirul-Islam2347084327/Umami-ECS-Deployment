@@ -45,19 +45,13 @@ resource "aws_ecs_task_definition" "task-definition" {
   container_definitions = jsonencode ([{
 
     name = "umami"
-    image = var.image-url #docker repo url
+    image = var.image-url 
     
 
     portMappings = [{
         containerPort = 3000
         protocol = "tcp"
     }]
-
-    environment = [{
-        name = "DATABASE_URL"
-        value = var.database-url #rds url
-    }]
-
     logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -70,6 +64,10 @@ resource "aws_ecs_task_definition" "task-definition" {
         {
           name      = "APP_SECRET"
           valueFrom = aws_ssm_parameter.app_secret.arn
+        },
+        {
+        name = "DATABASE_URL"
+        valueFrom = aws_ssm_parameter.db_url.arn
         }
       ]
   }]) 
@@ -161,7 +159,7 @@ resource "random_password" "app_secret" {
 
 
 resource "aws_ssm_parameter" "app_secret" {
-  name        = "/umami/prod/APP_SECRET"
+  name        = "/umami/APP_SECRET"
   type        = "SecureString"
   value       = random_password.app_secret.result
   description = "Encryption secret key for Umami analytics application sessions"
@@ -183,7 +181,8 @@ resource "aws_iam_policy" "ecs_ssm_read" {
         ]
         
         Resource = [
-          aws_ssm_parameter.app_secret.arn
+          aws_ssm_parameter.app_secret.arn,
+          aws_ssm_parameter.db_url.arn
         ]
       }
     ]
@@ -194,5 +193,11 @@ resource "aws_iam_policy" "ecs_ssm_read" {
 resource "aws_iam_role_policy_attachment" "ecs_execution_ssm" {
   role       = aws_iam_role.ecs_execution.name
   policy_arn = aws_iam_policy.ecs_ssm_read.arn
+}
+
+resource "aws_ssm_parameter" "db_url" {
+  name  = "/umami/DATABASE_URL"
+  type  = "SecureString"
+  value = var.database-url
 }
 
