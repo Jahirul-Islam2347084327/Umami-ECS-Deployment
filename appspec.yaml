@@ -1,0 +1,9 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "<TASK_DEFINITION_ARN>" 
+        LoadBalancerInfo:
+          ContainerName: "umami" # Name of container in your task definition
+          ContainerPort: 3000   # Port your container runs on
