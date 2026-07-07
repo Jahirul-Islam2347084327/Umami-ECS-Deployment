@@ -31,7 +31,7 @@ To maximize CI/CD execution speed and compress runtime footprints, the build wor
 
 ## The DevOps Pipeline & Continuous Deployment
 
-The automated deployment pipeline enforces elite security, static testing, and failsafe zero-downtime routing strategies on every git commit.
+The automated deployment pipeline enforces elite security, static testing, and failsafe zero-downtime routing strategies on every git push to main branch.
 
 ### 1. Zero-Trust Cloud Authentication
 
