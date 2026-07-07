@@ -26,6 +26,9 @@ This repository contains zero application code. It is an infrastructure-only pro
 * **Security & Compliance:** Trivy Container Scanner & Checkov/tfsec Static Code Analysis
 * **CI/CD Pipeline:** GitHub Actions + AWS CodeDeploy (Canary/Linear traffic routing shifts)
 
+## Multi-Stage Layer Optimization & Cache Acceleration
+To maximize CI/CD execution speed and compress runtime footprints, the build workflow leverages an advanced multi-stage Docker configuration optimized specifically for engine layer caching. By explicitly separating the copying of dependency manifests (package.json, pnpm-lock.yaml, or prisma schemas) from the rest of the application source code, the Docker engine can freeze and pull pre-cached node dependency layers from cache instead of re-downloading modules on every push. The runtime image completely discards build-essential binaries, compiler engines, and package managers—extracting exclusively the pre-compiled production artifacts and system assets into a stripped-down minimal layer. This aggressive dependency isolation structure reduces individual build times inside the GitHub Actions pipeline from minutes to seconds during repeat commits, while crashing the final image size down to a secure, highly-optimized runtime footprint.
+
 ## The DevOps Pipeline & Continuous Deployment
 
 The automated deployment pipeline enforces elite security, static testing, and failsafe zero-downtime routing strategies on every git commit.
