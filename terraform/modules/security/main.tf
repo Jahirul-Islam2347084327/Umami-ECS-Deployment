@@ -1,5 +1,5 @@
 resource "aws_security_group" "alb-security" {
-  name = "alb-securtiy"
+  name = "alb-security"
   vpc_id = var.vpc-id
 
   ingress {
@@ -28,7 +28,7 @@ egress {
 }
 
 resource "aws_security_group" "ecs-security" {
-  name = "ecs-securtiy"
+  name = "ecs-security"
   vpc_id = var.vpc-id
 
   ingress {
@@ -51,7 +51,7 @@ egress {
 }
 
 resource "aws_security_group" "rds-security" {
-  name = "ecs-securtiy"
+  name = "rds-security"
   vpc_id = var.vpc-id
 
   ingress {
@@ -76,6 +76,6 @@ egress {
     protocol = "-1"
 }
   tags = {
-    Name ="ecs-security"
+    Name ="rds-security"
   }
 }

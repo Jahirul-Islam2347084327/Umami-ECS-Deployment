@@ -78,3 +78,7 @@ module "codedeploy" {
   service-name = module.ecs.service-name
   cluster-name = module.ecs.cluster-name
 }
+
+output "dns-name" {
+  value = module.alb.alb-dns
+}

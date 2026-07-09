@@ -3,7 +3,7 @@ resource "aws_acm_certificate" "certificate" {
   validation_method = "DNS"
 }
 
-resource "aws_route53_zone" "zone" {
+data "aws_route53_zone" "zone" {
   name         = var.custom-url
 }
 
@@ -21,11 +21,11 @@ resource "aws_route53_record" "acm" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = aws_route53_zone.zone.zone_id
+  zone_id         = data.aws_route53_zone.zone.zone_id
 }
 
 resource "aws_route53_record" "alb" {
-  zone_id = aws_route53_zone.zone.id
+  zone_id = data.aws_route53_zone.zone.zone_id
   type = "A"
   name = var.custom-url
 alias {
