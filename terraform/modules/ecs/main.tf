@@ -91,16 +91,16 @@ resource "aws_ecs_service" "app" {
     container_name   = "umami"
     container_port   = 3000
     }
-  deployment_controller {
-    type = "CODE_DEPLOY"
-  }
+  #deployment_controller {
+   # type = "CODE_DEPLOY"
+  #}
 
-  lifecycle {
-    ignore_changes = [
-      load_balancer,   
-      task_definition  
-    ]
-  }
+  #lifecycle {
+   # ignore_changes = [
+    #  load_balancer,   
+     # task_definition  
+    #]
+  #}
 
   tags = {
     Name = "umami-service"
@@ -180,10 +180,13 @@ resource "aws_iam_policy" "ecs_ssm_read" {
           "kms:Decrypt"
         ]
         
-        Resource = [
-          aws_ssm_parameter.app_secret.arn,
-          aws_ssm_parameter.db_url.arn
+        Resource = "*"
+      },{
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt"
         ]
+        Resource = "*" 
       }
     ]
   })

@@ -70,14 +70,14 @@ module "waf" {
   alb-arn = module.alb.alb-arn
 }
 
-module "codedeploy" {
-  source = "../../../modules/codedeploy"
-  target-blue-name = module.alb.target-blue-name
-  target-green-name = module.alb.target-green-name
-  alb-listener = module.alb.alb-listener
-  service-name = module.ecs.service-name
-  cluster-name = module.ecs.cluster-name
-}
+#module "codedeploy" {
+#  source = "../../../modules/codedeploy"
+#  target-blue-name = module.alb.target-blue-name
+#  target-green-name = module.alb.target-green-name
+#  alb-listener = module.alb.alb-listener
+#  service-name = module.ecs.service-name
+#  cluster-name = module.ecs.cluster-name
+#}
 
 output "dns-name" {
   value = module.alb.alb-dns

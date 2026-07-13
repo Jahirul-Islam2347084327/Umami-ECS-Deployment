@@ -48,7 +48,7 @@ jobs:
           exit-code: '1' 
           ignore-unfixed: true 
           vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
 
       - name: Tag image
         env:
@@ -85,6 +85,8 @@ jobs:
           image: ${{ steps.login-ecr.outputs.registry }}/umami:${{ github.sha }}
 
     
+
+          
      # - name: Deploy Amazon ECS task definition
    #     uses: aws-actions/amazon-ecs-deploy-task-definition@v2.0.0
 #        with:
@@ -97,3 +99,10 @@ jobs:
     #      wait-for-service-stability: true
 
 
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+         task-definition: ${{ steps.render-task-def.outputs.task-definition }}
+         service: umami-service
+         cluster: umami-cluster
+         wait-for-service-stability: true

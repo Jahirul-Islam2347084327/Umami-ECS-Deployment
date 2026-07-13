@@ -44,9 +44,9 @@ resource "aws_lb_listener" "https" {
 tags = {
   Name = "umami-listener-https"
 }
-lifecycle {
-    ignore_changes = [default_action]
-  }
+#lifecycle {
+ #   ignore_changes = [default_action]
+  #}
 }
 
 resource "aws_lb_target_group" "blue" {
@@ -73,27 +73,27 @@ resource "aws_lb_target_group" "blue" {
     }
 }
 
-resource "aws_lb_target_group" "green" {
-   name = "umami-green-tg"
-  port = 3000
-  protocol = "HTTP"
-  vpc_id = var.vpc-id
-  target_type = "ip"
+#resource "aws_lb_target_group" "green" {
+  # name = "umami-green-tg"
+  #port = 3000
+  #protocol = "HTTP"
+  #vpc_id = var.vpc-id
+  #target_type = "ip"
 
-  health_check {
-    enabled             = true
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    timeout             = 5
-    interval            = 30
-    path                = "/api/heartbeat"
-    protocol            = "HTTP"
-    matcher             = "200"
-  }
-    deregistration_delay = 30
+ # health_check {
+ #   enabled             = true
+  #  healthy_threshold   = 2
+  #  unhealthy_threshold = 2
+  #  timeout             = 5
+  #  interval            = 30
+  #  path                = "/api/heartbeat"
+  #  protocol            = "HTTP"
+  #  matcher             = "200"
+  #}
+   # deregistration_delay = 30
 
-    tags = {
-        Name = "umami-green-tg"
-    }
+    #tags = {
+    #    Name = "umami-green-tg"
+    #}
   
-}
+#}

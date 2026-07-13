@@ -20,9 +20,9 @@ output "target-blue-name" {
   value = aws_lb_target_group.blue.name
 }
 
-output "target-green-name" {
-  value = aws_lb_target_group.green.name
-}
+#output "target-green-name" {
+#  value = aws_lb_target_group.green.name
+#}
 
 output "alb-listener" {
   value = aws_lb_listener.https.arn
