@@ -79,3 +79,15 @@ egress {
     Name ="rds-security"
   }
 }
+
+resource "aws_security_group" "vpc_endpoint_sg" {
+  name   = "vpc-endpoint-sg"
+  vpc_id = var.vpc-id
+
+  ingress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ecs-security.id]
+  }
+}

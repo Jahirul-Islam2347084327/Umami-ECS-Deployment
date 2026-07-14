@@ -1,3 +1,3 @@
 output "ecr-repo-url" {
-  value = "public.ecr.aws/grafana/grafana:latest"
+  value = aws_ecr_repository.ecr-repo.repository_url
 }

@@ -11,3 +11,7 @@ variable "az2" {
 variable "region" {
   type = string
 }
+
+variable "endpoint-security" {
+  type = string
+}

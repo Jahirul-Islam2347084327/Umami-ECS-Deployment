@@ -146,6 +146,7 @@ resource "aws_vpc_endpoint" "vpc-endpoint-dkr" {
   service_name = "com.amazonaws.${var.region}.ecr.dkr"
   vpc_endpoint_type = "Interface"
   private_dns_enabled = true
+  security_group_ids  = [var.endpoint-security]
 
   tags = {
     Name = "dkr-endpoint"
@@ -158,8 +159,18 @@ resource "aws_vpc_endpoint" "vpc-endpoint-api" {
   service_name = "com.amazonaws.${var.region}.ecr.api"
   vpc_endpoint_type = "Interface"
   private_dns_enabled = true
+  security_group_ids  = [var.endpoint-security]
 
   tags = {
     Name ="api-endpoint"
   }
+}
+
+resource "aws_vpc_endpoint" "s3_endpoint" {
+  vpc_id       = aws_vpc.main.id
+  service_name = "com.amazonaws.${var.region}.s3"
+  route_table_ids = [
+    aws_route_table.private-route-table-a.id, 
+    aws_route_table.private-route-table-b.id
+  ]
 }

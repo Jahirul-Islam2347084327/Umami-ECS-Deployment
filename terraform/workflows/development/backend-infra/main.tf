@@ -23,6 +23,7 @@ module "vpc" {
   az1 = var.az1
   az2 = var.az2
   region = var.region
+  endpoint-security = module.security.endpoint-security
 }
 
 module "ecr" {
