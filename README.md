@@ -8,6 +8,10 @@ A production-ready, highly available, and secure cloud infrastructure deployment
 
 This repository contains zero application code. It is an infrastructure-only project designed to showcase modern cloud architecture patterns. The system is built to maintain 99.99% uptime, survive availability zone failures, self-heal during faulty code updates, and enforce strict encryption boundaries at every layer.
 
+##Proof of it running
+
+<img width="953" height="527" alt="image" src="https://github.com/user-attachments/assets/12ad2ffa-ade3-4713-ba4e-e41e8a8066fd" />
+
 ### Core Architectural Features
 
 * **High Availability Subnet Topology:** A custom AWS VPC spans multiple Availability Zones (AZs). Public subnets isolate the Application Load Balancer (ALB), while ECS Fargate containers and the Amazon RDS database are deep within private subnets with no direct exposure to the internet.
@@ -138,7 +142,8 @@ terraform apply
 
 ```
 
-Note: Initial task definitions are injected with a lightweight public proxy placeholder (`public.ecr.aws/nginx/nginx:alpine`) to guarantee terraform apply clears perfectly before your GitHub pipeline pushes your actual image.
+Deployment Strategy
+This project utilizes a standard Rolling Deployment strategy to ensure full compatibility with the AWS Free Tier. While the infrastructure is fully configured for advanced traffic shifting, all CodeDeploy-specific modules—including the integrated logic within the ALB, ECS, and main.tf files—are currently commented out to maintain compliance with free tier. Should you wish to implement Canary deployments, these modules can be seamlessly enabled by uncommenting the relevant sections in the ALB module, ECS module, main infrastructure file, and the CI/CD deployment actions.
 
 ## Next-Horizon Architectural Goals
 
