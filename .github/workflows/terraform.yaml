@@ -32,13 +32,13 @@ jobs:
           output_format: cli
           soft_fail: true   
       - name: Terraform init
-        working-directory: ./terraform/workflows/backend-infra
+        working-directory: ./terraform/workflows/development/backend-infra
         run: terraform init
       - name: Terraform plan
-        working-directory: ./terraform/workflows/backend-infra
+        working-directory: ./terraform/workflows/development/backend-infra
         run: terraform plan -out=tfplan
       - name: Terraform Apply
-        working-directory: ./terraform/workflows/backend-infra
+        working-directory: ./terraform/workflows/development/backend-infra  
         run: terraform apply -auto-approve tfplan 
 
         #probably would have more jobs or workflows for different workflows
