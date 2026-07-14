@@ -8,7 +8,7 @@ A production-ready, highly available, and secure cloud infrastructure deployment
 
 This repository contains zero application code. It is an infrastructure-only project designed to showcase modern cloud architecture patterns. The system is built to maintain 99.99% uptime, survive availability zone failures, self-heal during faulty code updates, and enforce strict encryption boundaries at every layer.
 
-##Proof of it running
+## Proof of it running
 
 <img width="953" height="527" alt="image" src="https://github.com/user-attachments/assets/12ad2ffa-ade3-4713-ba4e-e41e8a8066fd" />
 
