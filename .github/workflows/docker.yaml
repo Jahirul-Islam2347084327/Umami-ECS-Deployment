@@ -88,7 +88,7 @@ jobs:
         run: |
           NEW_ARN="${{ steps.render-task-def.outputs.task-definition }}"
           # Use sed to replace the placeholder with the actual ARN
-          sed -i "s|TASK_DEF_ARN_PLACEHOLDER|$NEW_ARN|g" appspec.yml
+          sed -i "s|TASK_DEF_ARN_PLACEHOLDER|$NEW_ARN|g" appspec.yaml
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2.0.0
