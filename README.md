@@ -145,7 +145,8 @@ terraform apply
 
 ```
 
-Deployment Strategy
+## Deployment Strategy
+
 This project utilizes an automated Canary Deployment strategy powered by AWS CodeDeploy to ensure zero-downtime releases and safe updates. New application revisions are incrementally introduced to production by shifting 25% of live traffic to the updated ECS tasks for an initial validation period of 2 minutes. Health checks continuously monitor system telemetry during this window, allowing for automated rollbacks if anomalies are detected, or seamless traffic migration to 100% upon success. The deployment duration and traffic-shifting percentages can easily be scaled or extended within the CodeDeploy configuration as desired.
 
 ## Next-Horizon Architectural Goals
