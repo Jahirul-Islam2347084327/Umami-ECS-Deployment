@@ -146,7 +146,7 @@ terraform apply
 ```
 
 Deployment Strategy
-This project utilizes a standard Rolling Deployment strategy to ensure full compatibility with the AWS Free Tier. While the infrastructure is fully configured for advanced traffic shifting, all CodeDeploy-specific modules—including the integrated logic within the ALB, ECS, and main.tf files—are currently commented out to maintain compliance with free tier. Should you wish to implement Canary deployments, these modules can be seamlessly enabled by uncommenting the relevant sections in the ALB module, ECS module, main infrastructure file, and the CI/CD deployment actions.
+This project utilizes an automated Canary Deployment strategy powered by AWS CodeDeploy to ensure zero-downtime releases and safe updates. New application revisions are incrementally introduced to production by shifting 25% of live traffic to the updated ECS tasks for an initial validation period of 2 minutes. Health checks continuously monitor system telemetry during this window, allowing for automated rollbacks if anomalies are detected, or seamless traffic migration to 100% upon success. The deployment duration and traffic-shifting percentages can easily be scaled or extended within the CodeDeploy configuration as desired.
 
 ## Next-Horizon Architectural Goals
 
