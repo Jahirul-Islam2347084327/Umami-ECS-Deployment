@@ -39,6 +39,10 @@ resource "aws_codedeploy_deployment_group" "app" {
   deployment_config_name = "CodeDeployDefault.ECSCanary10Percent5Minutes" 
   service_role_arn       = aws_iam_role.codedeploy.arn           
 
+deployment_style {
+    deployment_type   = "BLUE_GREEN"
+    deployment_option = "WITH_TRAFFIC_CONTROL"
+  }
 
   ecs_service {
     cluster_name = var.cluster-name
