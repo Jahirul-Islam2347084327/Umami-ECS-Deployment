@@ -53,12 +53,6 @@ resource "aws_lb_target_group" "blue" {
   vpc_id = var.vpc-id
   target_type = "ip"
 
-stickiness {
-    type            = "lb_cookie"
-    cookie_duration = 300
-    enabled         = true
-  }
-
   health_check {
     enabled             = true
     healthy_threshold   = 2
@@ -83,11 +77,6 @@ resource "aws_lb_target_group" "green" {
   vpc_id = var.vpc-id
   target_type = "ip"
 
-stickiness {
-    type            = "lb_cookie"
-    cookie_duration = 300
-    enabled         = true
-  }
 
   health_check {
     enabled             = true
