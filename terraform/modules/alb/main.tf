@@ -29,10 +29,6 @@ resource "aws_lb_listener" "https" {
         weight = 0
       }
 
-      stickiness {
-        enabled  = true
-        duration = 300
-      }
     }
   }
 
