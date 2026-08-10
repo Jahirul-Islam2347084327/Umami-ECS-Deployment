@@ -36,7 +36,7 @@ resource "aws_codedeploy_app" "app" {
 resource "aws_codedeploy_deployment_group" "app" {
   app_name               = aws_codedeploy_app.app.name
   deployment_group_name  = "umami-deployment-group"
-  deployment_config_name = "CodeDeployDefault.ECSCanary10Percent5Minutes" 
+  deployment_config_name = aws_codedeploy_deployment_config.custom_ecs_canary.id
   service_role_arn       = aws_iam_role.codedeploy.arn           
 
 deployment_style {
@@ -76,5 +76,19 @@ deployment_style {
         name = var.target-green-name
       }
     }
+  }
+}
+
+resource "aws_codedeploy_deployment_config" "custom_ecs_canary" {
+  deployment_config_name = "UmamiCustomCanary25Percent2Minutes"
+  compute_platform       = "ECS"
+
+  traffic_routing_config {
+    type = "TimeBasedCanary"
+
+   time_based_canary {
+     interval   = 2  # time in minutes before shifting the rest
+    percentage = 25 # percentage of traffic to shift first
+   }
   }
 }
