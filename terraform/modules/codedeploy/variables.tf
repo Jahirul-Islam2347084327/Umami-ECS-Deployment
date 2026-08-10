@@ -17,3 +17,7 @@ variable "cluster-name" {
 variable "service-name" {
   type = string
 }
+
+variable "ecs-task-definition-arn" {
+  type = string
+}

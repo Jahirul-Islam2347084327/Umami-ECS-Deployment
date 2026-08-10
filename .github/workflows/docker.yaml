@@ -83,26 +83,21 @@ jobs:
           task-definition: task-definition.json
           container-name: umami
           image: ${{ steps.login-ecr.outputs.registry }}/umami:${{ github.sha }}
-
-    
-
-          
-     # - name: Deploy Amazon ECS task definition
-   #     uses: aws-actions/amazon-ecs-deploy-task-definition@v2.0.0
-#        with:
-#          task-definition: ${{ steps.render-task-def.outputs.task-definition }}
- #         service: umami-service
-  #        cluster: umami-cluster
- #         codedeploy-appspec: appspec.yaml
-  #        codedeploy-application: umami-deploy-app
-   #       codedeploy-deployment-group: umami-deployment-group
-    #      wait-for-service-stability: true
-
+      
+      - name: Inject Task Definition ARN into AppSpec
+        run: |
+          NEW_ARN="${{ steps.render-task-def.outputs.task-definition }}"
+          # Use sed to replace the placeholder with the actual ARN
+          sed -i "s|TASK_DEF_ARN_PLACEHOLDER|$NEW_ARN|g" appspec.yml
 
       - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2.0.0
         with:
-         task-definition: ${{ steps.render-task-def.outputs.task-definition }}
-         service: umami-service
-         cluster: umami-cluster
-         wait-for-service-stability: true
+          task-definition: ${{ steps.render-task-def.outputs.task-definition }}
+          service: umami-service
+          cluster: umami-cluster
+          codedeploy-appspec: appspec.yaml
+          codedeploy-application: umami-deploy-app
+          codedeploy-deployment-group: umami-deployment-group
+          wait-for-service-stability: true
+
